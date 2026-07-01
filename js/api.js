@@ -3,7 +3,7 @@
 // ==========================================
 
 // Địa chỉ gốc của Server dữ liệu đúng như cậu cấu hình trên Render
-const BASE_URL = "https://server.onrender.com";
+const BASE_URL = "https://server-xe33.onrender.com";
 
 /**
  * 🌸 TÍNH NĂNG TỰ ĐỘNG ĐÁNH THỨC SERVER KHI VỪA MỞ WEB
