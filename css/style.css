@@ -1,0 +1,71 @@
+/* Quản lý các biến màu sắc và layout tổng quát toàn bộ trang chủ */
+:root {
+    --bg-main: linear-gradient(135deg, #fff3f6 0%, #edf9ff 100%);
+    --pink-pastel: #ff9ebb;
+    --pink-hover: #ff7fa2;
+    --pink-border: #ffd1df;
+    --text-color: #5d4f53;
+    --outline-color: #ffb3cb;
+}
+
+* { 
+    box-sizing: border-box; 
+}
+
+body {
+    margin: 0;
+    padding: 15px;
+    min-height: 100vh;
+    background: var(--bg-main);
+    background-image: url('../assets/backgrounds/bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    font-family: 'Comfortaa', cursive, sans-serif;
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Khung viền lớn bọc ngoài của trang web */
+.chibi-web-wrapper {
+    background: #ffffff;
+    max-width: 800px;
+    width: 100%;
+    padding: 30px;
+    border-radius: 35px;
+    box-shadow: 0 15px 35px rgba(255, 158, 187, 0.15);
+    border: 4px solid #ffffff;
+    outline: 5px dashed var(--outline-color);
+    outline-offset: -12px;
+    position: relative;
+    z-index: 10;
+}
+
+.chibi-divider {
+    border: none;
+    border-top: 3px dashed #f2dee4;
+    margin: 25px 0;
+}
+
+/* Các lớp bổ trợ trạng thái hiển thị */
+.hidden { 
+    display: none !important; 
+}
+
+/* Đảm bảo canvas chạy hiệu ứng nằm trọn dưới nền không đè lên phần tương tác */
+#particles-canvas, #confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+#confetti-canvas {
+    z-index: 999;
+}

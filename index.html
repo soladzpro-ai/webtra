@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Tra Cứu Điểm Thi Chibi</title>
+    
+    <!-- 1. LIÊN KẾT TOÀN BỘ CÁC FILE CSS THƯ MỤC CỦA CẬU -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animation.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <!-- Khung giao diện chính (Cậu có thể đổi class tùy theo css của cậu) -->
+    <div class="search-container">
+        
+        <!-- Khu vực Logo & Tiêu đề -->
+        <div class="header-logo">
+            <img src="assets/logo/logo.png" alt="Logo Chibi" class="main-logo" onerror="this.style.display='none'">
+            <h2>🌸 TRA CỨU ĐIỂM THI 🌸</h2>
+            <p class="subtitle">Nhập số báo danh để xem kết quả điểm của cậu nhé</p>
+        </div>
+
+        <!-- Khung nhập liệu Form -->
+        <div class="search-form">
+            <!-- Ô nhập Số báo danh bắt buộc phải có id="txtSoBaoDanh" -->
+            <input type="text" id="txtSoBaoDanh" placeholder="Nhập số báo danh dự thi..." autocomplete="off">
+            
+            <!-- Nút bấm bắt buộc gọi hàm traCuuDiem() khi click -->
+            <button type="button" class="btn-search" onclick="traCuuDiem()">Tra Điểm Ngay</button>
+        </div>
+
+        <!-- Vùng hiển thị kết quả bắt buộc có id="ketQuaTraCuu" -->
+        <div id="ketQuaTraCuu"></div>
+
+    </div>
+
+    <!-- 2. NHÚNG CÁC FILE HIỆU ỨNG NỀN TẢNG (CHẠY TRƯỚC) -->
+    <script src="js/particles.js"></script>
+    <script src="js/confetti.js"></script>
+    <script src="js/animation.js"></script>
+    <script src="js/loading.js"></script>
+    <script src="js/notification.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- 3. NHÚNG FILE KẾT NỐI API (ĐỨNG TRƯỚC FILE SEARCH ĐỂ CẤP HÀM FETCH) -->
+    <script src="js/api.js"></script>
+
+    <!-- 4. NHÚNG FILE XỬ LÝ SỰ KIỆN NÚT BẤM (ĐỨNG CUỐI CÙNG) -->
+    <script src="js/search.js"></script>
+
+</body>
+</html>
