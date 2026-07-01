@@ -1,49 +1,40 @@
-// ==========================================
-// FILE: js/api.js - QUẢN LÝ KẾT NỐI SERVER RENDER
-// ==========================================
+/* ==========================================================================
+   FILE XỬ LÝ API TRA CỨU ĐIỂM - THPT NTB (FULL API)
+   ========================================================================== */
 
-// Địa chỉ gốc của Server dữ liệu đúng như cậu cấu hình trên Render
-const BASE_URL = "https://server-xe33.onrender.com";
-
-/**
- * 🌸 TÍNH NĂNG TỰ ĐỘNG ĐÁNH THỨC SERVER KHI VỪA MỞ WEB
- * Kêu cả 2 bên cùng thức giấc nhịp nhàng ngay từ giây đầu tiên.
- */
-window.addEventListener("load", () => {
-    console.log("🌸 Giao diện Web đã tải xong! Đang âm thầm gửi tín hiệu gõ cửa Server dữ liệu...");
-    
-    fetch(`${BASE_URL}/TuyenSinh/GetThongTinHocSinhTheoSoBaoDanh`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ soBaoDanh: "" }) // Bắn data rỗng sang để gọi dậy
-    })
-    .then(res => res.json())
-    .then(data => {
-        console.log("⚡ Tuyệt vời! Server dữ liệu đã phản hồi và báo:", data.message);
-    })
-    .catch(err => {
-        console.log("⏳ Máy chủ dữ liệu đang ngủ đông, hệ thống đang ép khởi động lại...");
-    });
-});
+// 1. Cấu hình đường dẫn gốc hướng thẳng tới server Render thực tế của cậu
+const API_BASE_URL = "https://server-xe33.onrender.com";
 
 /**
- * 🚀 HÀM CORE GỬI YÊU CẦU LẤY ĐIỂM THẬT
- * Hàm này dùng chung, sẽ được file search.js gọi đến khi người dùng bấm nút
+ * Hàm gọi API gửi số báo danh lên server để lấy kết quả điểm thi
+ * @param {string} sbd - Số báo danh cần tra cứu
+ * @returns {Promise<Object|null>} Dữ liệu học sinh hoặc null nếu có lỗi
  */
-async function fetchDiemHocSinh(soBaoDanh) {
-    const response = await fetch(`${BASE_URL}/TuyenSinh/GetThongTinHocSinhTheoSoBaoDanh`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ soBaoDanh: soBaoDanh }) // Truyền số báo danh thật lên
-    });
-    
-    if (!response.ok) {
-        throw new Error("Mạng kết nối đến Server dữ liệu gặp sự cố!");
+async function fetchStudentScore(sbd) {
+    try {
+        // Tùy thuộc vào cấu hình route backend cũ của cậu, thông thường sẽ là /api/search hoặc /search hoặc /scores/
+        // Ở đây tớ bọc sẵn url gọi endpoint phổ biến nhất. Cậu có thể điều chỉnh '/search' nếu backend dùng tên khác nhé.
+        const response = await fetch(`${API_BASE_URL}/search?sbd=${sbd}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        // Nếu server báo lỗi (ví dụ không tìm thấy SBD)
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `Lỗi server: ${response.status}`);
+        }
+
+        // Trả về cục dữ liệu JSON chứa điểm số nhận từ server
+        return await response.json();
+
+    } catch (error) {
+        console.error("❌ Lỗi khi gọi API tra cứu điểm:", error);
+        throw error; // Đẩy lỗi ra ngoài để file search.js/app.js bắt lấy và hiển thị thông báo lên UI
     }
-    
-    return await response.json();
 }
+
+// Xuất hàm ra global để các file script khác (search.js, app.js) có thể gọi trực tiếp
+window.fetchStudentScore = fetchStudentScore;
