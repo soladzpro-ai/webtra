@@ -1,34 +1,27 @@
 /* ==========================================================================
-   FILE XỬ LÝ API TRA CỨU ĐIỂM - BẢN FIX CHẮC CHẮN CHẠY (FULL API)
+   FILE XỬ LÝ API TRA CỨU ĐIỂM - PHƯƠNG ÁN 1 (FULL FILE)
    ========================================================================== */
 
 const API_BASE_URL = "https://server-xe33.onrender.com";
 
-// Hàm gọi API gửi SBD lên server bằng phương thức POST gửi dữ liệu ngầm
+// Gọi API bằng phương thức GET truyền SBD lên url
 async function fetchStudentScore(sbd) {
     try {
-        // Chuyển hoàn toàn sang phương thức POST gửi body lên server-xe33
-        const response = await fetch(`${API_BASE_URL}/search`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ sbd: sbd }) // Gửi số báo danh dạng JSON
+        const response = await fetch(`${API_BASE_URL}/search?sbd=${sbd}`, {
+            method: 'GET'
         });
 
         if (!response.ok) {
-            throw new Error(`Không tìm thấy dữ liệu hoặc lỗi server: ${response.status}`);
+            throw new Error(`Lỗi server hoặc không tìm thấy SBD: ${response.status}`);
         }
-
-        const data = await response.json();
-        return data;
+        return await response.json();
     } catch (error) {
-        console.error("❌ Lỗi API:", error);
+        console.error("❌ Lỗi API Phương án 1:", error);
         throw error;
     }
 }
 
-// LẮNG NGHE SỰ KIỆN CLICK TRỰC TIẾP TẠI ĐÂY ĐỂ ĐÈ LÊN CÁC FILE JS KHÁC BỊ LỖI
+// Khung xử lý sự kiện hiển thị lên giao diện Chibi
 document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('btnTraDiem') || document.querySelector('.btnSearch');
     const input = document.getElementById('sbdInput') || document.querySelector('.studentId');
@@ -44,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Hiển thị trạng thái đang tải dữ liệu
             if (statusBox && statusText) {
                 statusText.innerText = "Đang xin dữ liệu từ máy chủ, cậu đợi xíu nha... ✨";
                 statusBox.style.display = 'block';
@@ -53,10 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const student = await fetchStudentScore(sbdValue);
-                
                 if (statusBox) statusBox.style.display = 'none';
 
-                // Đổ dữ liệu thẳng vào bảng điểm Chibi trên giao diện
                 if (student) {
                     document.getElementById('resSBD').innerText = student.sbd || student.SBD || sbdValue;
                     document.getElementById('resName').innerText = student.hoTen || student.name || student.Ten || "Học Sinh";
@@ -65,17 +55,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('resAnh').innerText = student.anh || student.Anh || "0";
                     document.getElementById('resTD').innerText = student.tongDiem || student.td || student.TĐ || "0";
 
-                    // Hiện bảng điểm bồng bềnh
                     if (resultBox) resultBox.style.display = 'block';
 
-                    // Bắn pháo hoa ăn mừng tung tóe
                     if (typeof confetti === 'function') {
                         confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
                     }
                 }
             } catch (err) {
                 if (statusText) {
-                    statusText.innerText = "⏰ Máy chủ đang bận tỉnh giấc (Render Free ngủ đông). Cậu đợi 20-30 giây rồi bấm lại lần nữa nha! 🌸";
+                    statusText.innerText = "⏰ Máy chủ phản hồi lỗi hoặc SBD chưa đúng. Cậu đợi xíu bấm lại nha! 🌸";
                 }
                 console.error(err);
             }
